@@ -9,12 +9,13 @@ class PlayScene extends Phaser.Scene {
 
         // ladda spelets bakgrundsbild, statisk
         // setOrigin behöver användas för att den ska ritas från top left
-        this.add.image(0, 0, 'background').setOrigin(0, 0);
+        //this.add.image(0, 0, 'background').setOrigin(0, 0);
+        
 
         // skapa en tilemap från JSON filen vi preloadade
         const map = this.make.tilemap({ key: 'map' });
         // ladda in tilesetbilden till vår tilemap
-        const tileset = map.addTilesetImage('jefrens_platformer', 'tiles');
+        const tileset = map.addTilesetImage('Platformer', 'tiles');
 
         // initiera animationer, detta är flyttat till en egen metod
         // för att göra create metoden mindre rörig
@@ -22,11 +23,11 @@ class PlayScene extends Phaser.Scene {
 
         // keyboard cursors
         this.cursors = this.input.keyboard.createCursorKeys();
-
+        this.bakgrund = map.createLayer('bakgrund', tileset);
         // Ladda lagret Platforms från tilemappen
         // och skapa dessa
         // sätt collisionen
-        this.platforms = map.createLayer('Platforms', tileset);
+        this.platforms = map.createLayer('plat', tileset);
         this.platforms.setCollisionByExclusion(-1, true);
         // platforms.setCollisionByProperty({ collides: true });
         // this.platforms.setCollisionFromCollisionGroup(
@@ -35,45 +36,15 @@ class PlayScene extends Phaser.Scene {
         //     this.platforms
         // );
         // platforms.setCollision(1, true, true);
-
+        
         // skapa en spelare och ge den studs
         this.player = this.physics.add.sprite(50, 300, 'player');
         this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
 
-        // skapa en fysik-grupp
-        this.spikes = this.physics.add.group({
-            allowGravity: false,
-            immovable: true
-        });
-
-        // från platforms som skapats från tilemappen
-        // kan vi ladda in andra lager
-        // i tilemappen finns det ett lager Spikes
-        // som innehåller spikarnas position
-        console.log(this.platforms);
-        map.getObjectLayer('Spikes').objects.forEach((spike) => {
-            // iterera över spikarna, skapa spelobjekt
-            const spikeSprite = this.spikes
-                .create(spike.x, spike.y - spike.height, 'spike')
-                .setOrigin(0);
-            spikeSprite.body
-                .setSize(spike.width, spike.height - 20)
-                .setOffset(0, 20);
-        });
-        // lägg till en collider mellan spelare och spik
-        // om en kollision sker, kör callback metoden playerHit
-        this.physics.add.collider(
-            this.player,
-            this.spikes,
-            this.playerHit,
-            null,
-            this
-        );
-
         // krocka med platforms lagret
         this.physics.add.collider(this.player, this.platforms);
-
+        
         // skapa text på spelet, texten är tom
         // textens innehåll sätts med updateText() metoden
         this.text = this.add.text(16, 16, '', {
