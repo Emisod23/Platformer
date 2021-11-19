@@ -44,6 +44,14 @@ class PlayScene extends Phaser.Scene {
 
         // krocka med platforms lagret
         this.physics.add.collider(this.player, this.platforms);
+
+                // skapa en spelare och ge den studs
+                this.foe = this.physics.add.sprite(800, 300, 'foe');
+                this.foe.setBounce(0.1);
+                this.foe.setCollideWorldBounds(true);
+        
+                // krocka med platforms lagret
+                this.physics.add.collider(this.foe, this.platforms);
         
         // skapa text på spelet, texten är tom
         // textens innehåll sätts med updateText() metoden
