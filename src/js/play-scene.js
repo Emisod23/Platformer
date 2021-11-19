@@ -45,13 +45,13 @@ class PlayScene extends Phaser.Scene {
         // krocka med platforms lagret
         this.physics.add.collider(this.player, this.platforms);
 
-                // skapa en spelare och ge den studs
-                this.foe = this.physics.add.sprite(800, 300, 'foe');
-                this.foe.setBounce(0.1);
-                this.foe.setCollideWorldBounds(true);
+        this.foe = this.physics.add.sprite(800, 300, 'foe');
+        this.foe.setBounce(0.1);
+        this.foe.setCollideWorldBounds(true);
         
-                // krocka med platforms lagret
-                this.physics.add.collider(this.foe, this.platforms);
+        // krocka med platforms lagret
+        this.physics.add.collider(this.foe, this.platforms);
+        // skapa en spelare och ge den studs
         
         // skapa text på spelet, texten är tom
         // textens innehåll sätts med updateText() metoden
@@ -104,6 +104,10 @@ class PlayScene extends Phaser.Scene {
             if (this.player.body.onFloor()) {
                 this.player.play('idle', true);
             }
+        }
+
+        if (this.foe.body.onFloor() && this.foe.VelocityX == 0){
+                this.foe.play('idlefoe', true);
         }
 
         // Player can jump while walking any direction by pressing the space bar
@@ -171,6 +175,23 @@ class PlayScene extends Phaser.Scene {
         this.anims.create({
             key: 'jump',
             frames: [{ key: 'player', frame: 'jefrens_5' }],
+            frameRate: 10
+        });
+
+        this.anims.create({
+            key: 'walkfoe',
+            frames: this.anims.generateFrameNames('foe', {
+                prefix: 'jefrens_',
+                start: 1,
+                end: 4
+            }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idlefoe',
+            frames: [{ key: 'foe', frame: 'foe_4' }],
             frameRate: 10
         });
     }
