@@ -6,7 +6,6 @@ class PlayScene extends Phaser.Scene {
     create() {
         // variabel för att hålla koll på hur många gånger vi spikat oss själva
         this.spiked = 0;
-
         // ladda spelets bakgrundsbild, statisk
         // setOrigin behöver användas för att den ska ritas från top left
         //this.add.image(0, 0, 'background').setOrigin(0, 0);
@@ -36,10 +35,10 @@ class PlayScene extends Phaser.Scene {
         //     this.platforms
         // );
         // platforms.setCollision(1, true, true);
-        
+        this.star = this.physics.add.sprite(50, 100, 'star').setImmovable(true);
+        this.star.body.setAllowGravity(false);
         // skapa en spelare och ge den studs
         this.player = this.physics.add.sprite(50, 300, 'player');
-        this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
 
         // krocka med platforms lagret
@@ -52,7 +51,7 @@ class PlayScene extends Phaser.Scene {
         // krocka med platforms lagret
         this.physics.add.collider(this.foe, this.platforms);
         // skapa en spelare och ge den studs
-        
+        this.physics.add.overlap(this.player, this.star, this.collectStar, null, this);
         // skapa text på spelet, texten är tom
         // textens innehåll sätts med updateText() metoden
         this.text = this.add.text(16, 16, '', {
@@ -151,6 +150,10 @@ class PlayScene extends Phaser.Scene {
             repeat: 5
         });
         this.updateText();
+    }
+
+    collectStar(star, player) {
+        this.star.disableBody(true, true);
     }
 
     // när vi skapar scenen så körs initAnims för att ladda spelarens animationer

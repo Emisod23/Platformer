@@ -19,6 +19,7 @@ class PreloadScene extends Phaser.Scene {
             '/images/jefrens_foe.json'
         );
         this.load.image('tiles', '/tilesets/jefrens_tilesheet.png');
+        this.load.image('star', 'assets/star.png');
         // här laddar vi in en tilemap med spelets "karta"
         this.load.tilemapTiledJSON('map', '/tilemaps/Test.json');
     }
