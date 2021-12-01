@@ -1,0 +1,5 @@
+- [] Movement och kollision med plattformer
+- [] Collectables/goal
+- [] Hinder/snö
+- [] Minskad syn/mörker
+- [] Powerups
