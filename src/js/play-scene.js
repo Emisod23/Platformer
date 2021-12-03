@@ -49,6 +49,10 @@ class PlayScene extends Phaser.Scene {
         this.foe.setCollideWorldBounds(true);
         this.snow = this.physics.add.group({
         });
+        this.physics.add.collider(this.platforms, this.snow, die, null, this);
+        function die(snow){
+            snow.destroy();
+        }
         // krocka med platforms lagret
         this.physics.add.collider(this.foe, this.platforms);
         // skapa en spelare och ge den studs
@@ -76,10 +80,16 @@ class PlayScene extends Phaser.Scene {
 
     // play scenens update metod
     update() {
-        var snowing = this.snow.create(Phaser.Math.FloatBetween(-10, 900), -10, 'foe').setScale(0.2, 0.2);
-        snowing 
-        
+        var snowing = this.snow.create(Phaser.Math.FloatBetween(-10, 2000), -10, 'foe').setScale(0.2, 0.2).setVelocity(-20, 40);
+        snowing.body.setAllowGravity(false);
 
+        this.snow.children.iterate(function(child){
+            if(child != null){
+                if (child.y > 400){
+                    child.destroy();
+                }
+            }
+        })
         // för pause
         if (this.keyObj.isDown) {
             // pausa nuvarande scen
