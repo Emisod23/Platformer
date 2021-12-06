@@ -50,7 +50,11 @@ class PlayScene extends Phaser.Scene {
         this.snow = this.physics.add.group({
         });
         this.physics.add.collider(this.platforms, this.snow, die, null, this);
+        this.physics.add.overlap(this.player, this.snow, die2, null, this);
         function die(snow){
+            snow.destroy();
+        }
+        function die2(player, snow){
             snow.destroy();
         }
         // krocka med platforms lagret
@@ -80,9 +84,10 @@ class PlayScene extends Phaser.Scene {
 
     // play scenens update metod
     update() {
+        if(Math.random() > 0.8){
         var snowing = this.snow.create(Phaser.Math.FloatBetween(-10, 2000), -10, 'foe').setScale(0.2, 0.2).setVelocity(-20, 40);
         snowing.body.setAllowGravity(false);
-
+    }
         this.snow.children.iterate(function(child){
             if(child != null){
                 if (child.y > 400){
