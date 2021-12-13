@@ -9,10 +9,12 @@ class PlayScene extends Phaser.Scene {
         // ladda spelets bakgrundsbild, statisk
         // setOrigin behöver användas för att den ska ritas från top left
         //this.add.image(0, 0, 'background').setOrigin(0, 0);
-        
+        this.cameras.main.setSize(896, 448);
+        this.cameras.main.setBounds(0, 0, 1536, 960);
+        this.physics.world.setBounds(0, 0, 1536, 960);
 
         // skapa en tilemap från JSON filen vi preloadade
-        const map = this.make.tilemap({ key: 'map' });
+        const map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32});
         // ladda in tilesetbilden till vår tilemap
         const tileset = map.addTilesetImage('Platformer', 'tiles');
 
@@ -40,6 +42,7 @@ class PlayScene extends Phaser.Scene {
         // skapa en spelare och ge den studs
         this.player = this.physics.add.sprite(50, 300, 'player');
         this.player.setCollideWorldBounds(true);
+        this.player.setCircle(32);
 
         // krocka med platforms lagret
         this.physics.add.collider(this.player, this.platforms);
@@ -80,6 +83,7 @@ class PlayScene extends Phaser.Scene {
         this.events.on('resume', function () {
             console.log('Play scene resumed');
         });
+        this.cameras.main.startFollow(this.player);
     }
 
     // play scenens update metod
@@ -90,7 +94,7 @@ class PlayScene extends Phaser.Scene {
     }
         this.snow.children.iterate(function(child){
             if(child != null){
-                if (child.y > 400){
+                if (child.y > 900){
                     child.destroy();
                 }
             }
