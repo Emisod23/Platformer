@@ -8,7 +8,7 @@ class PlayScene extends Phaser.Scene {
         this.spiked = 0;
         // ladda spelets bakgrundsbild, statisk
         // setOrigin behöver användas för att den ska ritas från top left
-        //this.add.image(0, 0, 'background').setOrigin(0, 0);
+        this.add.image(0, 0, 'background').setOrigin(0, 0);
         this.cameras.main.setSize(896, 448);
         this.cameras.main.setBounds(0, 0, 1536, 960);
         this.physics.world.setBounds(0, 0, 1536, 960);
@@ -16,7 +16,7 @@ class PlayScene extends Phaser.Scene {
         // skapa en tilemap från JSON filen vi preloadade
         const map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32});
         // ladda in tilesetbilden till vår tilemap
-        const tileset = map.addTilesetImage('Platformer', 'tiles');
+        const tileset = map.addTilesetImage('iceblock', 'tiles');
 
         // initiera animationer, detta är flyttat till en egen metod
         // för att göra create metoden mindre rörig
@@ -37,8 +37,8 @@ class PlayScene extends Phaser.Scene {
         //     this.platforms
         // );
         // platforms.setCollision(1, true, true);
-        this.star = this.physics.add.sprite(50, 100, 'star').setImmovable(true);
-        this.star.body.setAllowGravity(false);
+        this.mat = this.physics.add.sprite(50, 100, 'mat').setImmovable(true).setFrame(2);
+        this.mat.body.setAllowGravity(false);
         // skapa en spelare och ge den studs
         this.player = this.physics.add.sprite(50, 300, 'player');
         this.player.setCollideWorldBounds(true);
@@ -47,9 +47,6 @@ class PlayScene extends Phaser.Scene {
         // krocka med platforms lagret
         this.physics.add.collider(this.player, this.platforms);
 
-        this.foe = this.physics.add.sprite(800, 300, 'foe');
-        this.foe.setBounce(0.1);
-        this.foe.setCollideWorldBounds(true);
         this.snow = this.physics.add.group({
         });
         this.physics.add.collider(this.platforms, this.snow, die, null, this);
@@ -61,9 +58,8 @@ class PlayScene extends Phaser.Scene {
             snow.destroy();
         }
         // krocka med platforms lagret
-        this.physics.add.collider(this.foe, this.platforms);
         // skapa en spelare och ge den studs
-        this.physics.add.overlap(this.player, this.star, this.collectStar, null, this);
+        this.physics.add.overlap(this.player, this.mat, this.collectMat, null, this);
         // skapa text på spelet, texten är tom
         // textens innehåll sätts med updateText() metoden
         this.text = this.add.text(16, 16, '', {
@@ -89,7 +85,7 @@ class PlayScene extends Phaser.Scene {
     // play scenens update metod
     update() {
         if(Math.random() > 0.8){
-        var snowing = this.snow.create(Phaser.Math.FloatBetween(-10, 2000), -10, 'foe').setScale(0.2, 0.2).setVelocity(-20, 40);
+        var snowing = this.snow.create(Phaser.Math.FloatBetween(-10, 2000), -10, 'snowflakesmall').setVelocity(-20, 40);
         snowing.body.setAllowGravity(false);
     }
         this.snow.children.iterate(function(child){
@@ -127,10 +123,6 @@ class PlayScene extends Phaser.Scene {
             if (this.player.body.onFloor()) {
                 this.player.play('idle', true);
             }
-        }
-
-        if (this.foe.body.onFloor() && this.foe.VelocityX == 0){
-                this.foe.play('idlefoe', true);
         }
 
         // Player can jump while walking any direction by pressing the space bar
@@ -176,8 +168,8 @@ class PlayScene extends Phaser.Scene {
         this.updateText();
     }
 
-    collectStar(star, player) {
-        this.star.disableBody(true, true);
+    collectMat(mat, player) {
+        this.mat.disableBody(true, true);
     }
 
     // när vi skapar scenen så körs initAnims för att ladda spelarens animationer
@@ -185,9 +177,9 @@ class PlayScene extends Phaser.Scene {
         this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNames('player', {
-                prefix: 'jefrens_',
+                prefix: 'WinterRun',
                 start: 1,
-                end: 4
+                end: 6
             }),
             frameRate: 10,
             repeat: -1
@@ -195,20 +187,8 @@ class PlayScene extends Phaser.Scene {
 
         this.anims.create({
             key: 'idle',
-            frames: [{ key: 'player', frame: 'jefrens_2' }],
-            frameRate: 10
-        });
-
-        this.anims.create({
-            key: 'jump',
-            frames: [{ key: 'player', frame: 'jefrens_5' }],
-            frameRate: 10
-        });
-
-        this.anims.create({
-            key: 'walkfoe',
-            frames: this.anims.generateFrameNames('foe', {
-                prefix: 'jefrens_',
+            frames: this.anims.generateFrameNames('player', {
+                prefix: 'WinterIdle',
                 start: 1,
                 end: 4
             }),
@@ -217,9 +197,13 @@ class PlayScene extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'idlefoe',
-            frames: [{ key: 'foe', frame: 'foe_4' }],
-            frameRate: 10
+            key: 'jump',
+            frames: this.anims.generateFrameNames('player', {
+                prefix: 'WinterJump',
+                start: 1,
+                end: 3
+            }),
+            frameRate: 5,
         });
     }
 }
