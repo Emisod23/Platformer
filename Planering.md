@@ -1,5 +1,5 @@
-- [] Movement och kollision med plattformer
-- [] Collectables/goal
-- [] Hinder/snö
+- [Done] Movement och kollision med plattformer
+- [Done] Collectables/goal
+- [Semi-done] Hinder/snö
 - [] Minskad syn/mörker
 - [] Powerups
